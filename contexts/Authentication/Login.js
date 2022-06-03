@@ -48,7 +48,7 @@ Router.post('/', (req, res, next) => {
 
 
 
-    mariadb.query(`SELECT * FROM student WHERE student_email = "${req.body.email}" OR studentnumber = "${req.body.email}"`, (err, rows, fields) => {
+    mariadb.query(`SELECT * FROM Student WHERE student_email = "${req.body.email}" OR studentnumber = "${req.body.email}"`, (err, rows, fields) => {
         if (!err) {
             if (rows.length < 1) {
                 res.send({
@@ -59,8 +59,10 @@ Router.post('/', (req, res, next) => {
                 return
             }
 
-            mariadb.query(`SELECT * FROM student WHERE student_email = "${req.body.email}" OR studentnumber = "${req.body.email}"`, (err, rows, fields) => {
-                var bytes = CryptoJS.AES.decrypt(rows[0].password, '123');
+            mariadb.query(`SELECT * FROM Student WHERE Student_Email = "${req.body.email}" OR StudentNumber = "${req.body.email}"`, (err, rows, fields) => {
+                console.log(rows[0])
+
+                var bytes = CryptoJS.AES.decrypt(rows[0].Password, '123');
                 var originalText = bytes.toString(CryptoJS.enc.Utf8);
 
                
@@ -78,7 +80,7 @@ Router.post('/', (req, res, next) => {
                             "error": false,
                             "data": rows,
                         });
-                        console.log(new Date() + " - A user logged in " + rows[0].email)
+                        console.log(new Date() + " - A user logged in " + rows[0].Email)
                     }
                 }
             });
