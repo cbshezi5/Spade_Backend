@@ -6,7 +6,7 @@ const mariadb = mysql.createConnection({
     host: 'bus-point-db-inst.cvqpj5ith2h1.us-east-1.rds.amazonaws.com',
     user: 'admin',
     password: '1234567891',
-    database: 'buspoint_db_schema'
+    database: 'buspoint_db'
 })
 mariadb.connect()
 
