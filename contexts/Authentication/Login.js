@@ -60,8 +60,7 @@ Router.post('/', (req, res, next) => {
             }
 
             mariadb.query(`SELECT * FROM Student WHERE Student_Email = "${req.body.email}" OR StudentNumber = "${req.body.email}"`, (err, rows, fields) => {
-                console.log(rows[0])
-
+                
                 var bytes = CryptoJS.AES.decrypt(rows[0].Password, '123');
                 var originalText = bytes.toString(CryptoJS.enc.Utf8);
 
