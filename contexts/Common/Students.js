@@ -21,7 +21,7 @@ Router.get('/', (req, res, next) => {
 
     if (req.query.id) {
         
-            mariadb.query(`SELECT * from student WHERE student_id = ${req.query.id}`, (err, rows) => {
+            mariadb.query(`SELECT * from Student WHERE Studentid = ${req.query.id}`, (err, rows) => {
                 if (!err) {
                     res.send({
                         error: false,
@@ -69,7 +69,7 @@ Router.delete('/', (req, res) => {
 
     if (req.body.id == "*") {
         //Delete All if body with element id is equal to * else
-        mariadb.query(`DELETE FROM student `, (err, rows) => {
+        mariadb.query(`DELETE FROM Student `, (err, rows) => {
             if (!err) {
                 res.send({
                     error: false,
@@ -86,7 +86,7 @@ Router.delete('/', (req, res) => {
         })
     } else {
         //delete the metioned id
-        mariadb.query(`DELETE FROM student WHERE id = ${req.body.id}`, (err, rows) => {
+        mariadb.query(`DELETE FROM Student WHERE Studentid = ${req.body.id}`, (err, rows) => {
             if (!err) {
                 res.send({
                     error: false,
@@ -125,7 +125,7 @@ Router.post('', (req, res) => {
         })
         return
     }
-    mariadb.query(`INSERT INTO student VALUES(DEFAULT,'${studNum}','${firstname}','${lastname}','${email}','${password}',${isVerified} )`, (err, rows) => {
+    mariadb.query(`INSERT INTO Student VALUES(DEFAULT,'${studNum}','${firstname}','${lastname}','${email}','${password}',${isVerified} )`, (err, rows) => {
         if (!err) {
             res.send({
                 error: false,

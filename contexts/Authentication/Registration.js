@@ -57,14 +57,7 @@ Router.post('/',async (req, res, next) => {
         return
     }
 
-    if (!req.body.role) {
-        res.send({
-            error: true,
-            code: "R007",
-            message: "role was not found"
-        });
-        return
-    }
+  
     if (!req.body.studNum) {
         res.send({
             error: true,
@@ -78,11 +71,8 @@ Router.post('/',async (req, res, next) => {
 
     var sql =''
     let x = false
-    if(req.body.role == 'S')
-    {
-        
-       
-         await mariadb.promise().query(`SELECT student_id FROM student WHERE student_email = '${req.body.email}' OR studentnumber = '${req.body.studNum}'`)
+    
+         await mariadb.promise().query(`SELECT Studentid FROM Student WHERE Student_Email = '${req.body.email}' OR StudentNumber = '${req.body.studNum}'`)
         .then((data)=>{
             if(data[0][0]?.student_id)
             {
@@ -94,50 +84,36 @@ Router.post('/',async (req, res, next) => {
                 return
             }
 
-            sql = "INSERT INTO `student`(`student_id`, `firstname`, `lastname`, `password`, `student_email`, `studentnumber`) "+ 
-            "VALUES (DEFAULT,'"+req.body.fname+"','"+req.body.lname+"','"+ciphertext+"','"+req.body.email+"','"+req.body.studNum+"');";
+            sql = "INSERT INTO `Student`(`Studentid`, `Firstname`, `Lastname`, `Password`, `Student_Email`, `StudentNumber`,`IdNumber`) "+ 
+            "VALUES (DEFAULT,'"+req.body.fname+"','"+req.body.lname+"','"+ciphertext+"','"+req.body.email+"','"+req.body.studNum+"','"+req.body.idnum+"');";
         })
         .catch((err)=>{
             console.log("err")
         })
         
-    }
 
-    if(req.body.role == 'T')
-    {
-        sql = "INSERT INTO `admitter`(`admitter_id`, `firstname`, `lastname`, `password`, `email`) "+ 
-        "VALUES (DEFAULT,'"+req.body.fname+"','"+req.body.lname+"','"+ciphertext+"','"+req.body.email+"');";
-    
-    }
-
-    if(req.body.role == 'A')
-    {
-        sql = "INSERT INTO `administrator`(`admin_id`, `firstname`, `lastname`, `password`, `email`) "+ 
-        "VALUES (DEFAULT,'"+req.body.fname+"','"+req.body.lname+"','"+ciphertext+"','"+req.body.email+"');";
-    }
-
-    if(x)
-        return
-
-    if(sql == '')
-    {
-        res.send({
-            error: true,
-            message: "Error role sent"
-        }); 
-        return
-    }
-    
     
     try {
      
         mariadb.query(sql, (err, rows, fields) => {
             if (!err) {
-                res.send({
-                    error: false,
-                    data: rows
+
+                
+                mariadb.query(`INSERT INTO Campus VALUES(DEFAULT,'${req.body.campus}',${rows.insertId})`, (errCamp, rowsCamp, fieldsCamp) => {
+                    if(!errCamp)
+                    res.send({
+                        error: false,
+                        data: rowsCamp
+                    });
+                    else
+                    res.send({
+                        error: true,
+                        code: errCamp
+                    });
                 });
-                console.log(new Date() + " - A student successfully registered " + req.body.email)
+
+                
+              
                 return
             } else {
                 if (err.code == 'ER_DUP_ENTRY') {
@@ -191,7 +167,7 @@ Router.delete('/',async (req, res, next)=>{
         }); 
     }
 
-    mariadb.query(`DELETE FROM student WHERE student_email = '${req.query.email}'`,(err,result,field)=>{
+    mariadb.query(`DELETE FROM Student WHERE Student_Email = '${req.query.email}'`,(err,result,field)=>{
         if(err)
         res.send({
             error:true,
@@ -244,7 +220,7 @@ Router.put('/',async (req,res,next)=>{
         }); 
     }
 
-    mariadb.query(`UPDATE student SET firstname = '${req.query.fname}', lastname = '${req.query.lname}' WHERE student_email = '${req.query.email}'`,(err,result,field)=>{
+    mariadb.query(`UPDATE Student SET Firstname = '${req.query.fname}', Lastname = '${req.query.lname}' WHERE Student_Email = '${req.query.email}'`,(err,result,field)=>{
         if(err)
         res.send({
             error:true,
@@ -279,7 +255,7 @@ Router.get('/',async (req,res,next)=>{
         }); 
     }
 
-    mariadb.query(`SELECT * FROM student WHERE student_email = '${req.query.email}'`,(err,result,field)=>{
+    mariadb.query(`SELECT * FROM Student WHERE Student_Email = '${req.query.email}'`,(err,result,field)=>{
         if(err)
         res.send({
             error:true,
