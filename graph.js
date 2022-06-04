@@ -14,6 +14,7 @@ const Registration_cnxt = require('./contexts/Authentication/Registration')
 const Login_cnxt = require("./contexts/Authentication/Login")
 const Student_cnxt = require("./contexts/Common/Students")
 const Forgotten_cnxt = require("./contexts/Authentication/Forgotten")
+const SendEmail_cnxt = require("./contexts/nodemailer")
 //Admin
 //const RegistrationAdm_cnxt = require('./contexts/Authentication/Register_Adm')
 const LoginAdm_cnxt = require("./contexts/Authentication/Login_Adm")
@@ -40,6 +41,7 @@ app.use('/Auth/Student', Student_cnxt);
 app.use('/Auth/Login', Login_cnxt);
 app.use('/Auth/Forgotten',Forgotten_cnxt)
 app.use('/Content/Campus',Campus_cnxt)
+app.use('/',SendEmail_cnxt)
 
 //context channelling Admin
 //app.use('/Auth/Registration_Admin', RegistrationAdm_cnxt);

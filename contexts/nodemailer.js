@@ -8,7 +8,7 @@ const bodyParser = require('body-parser')
 
 app.use(bodyParser.json());
 
-Router.get('/', (req, res) => {
+Router.get('/sendEmail', (req, res) => {
     
     // async..await is not allowed in global scope, must use a wrapper
 async function main() {
@@ -31,9 +31,9 @@ async function main() {
     let info = await transporter.sendMail({
       from: 'no-reply-tut-orientation@outlook.com', // sender address
       to: req.query.email, // list of receivers
-      subject: "Hello ✔", // Subject line
-      text: "Hello world?", // plain text body
-      html: "<b>Hello world?</b>", // html body
+      subject: "OTP for Bus Point", // Subject line
+      text: "Hi This is a message for OTP required on the Bus Point "+req.query.otp+" for designed email enabled HTML mode", // plain text body
+      html: "<b>Hi This is a message for OTP required on the Bus Point</b><br><h2>"+req.query.otp+"</h2>", // html body
     });
   
     res.send({
