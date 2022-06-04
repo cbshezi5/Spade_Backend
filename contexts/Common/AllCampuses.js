@@ -10,7 +10,7 @@ app.use(bodyParser.json());
 
 // Get Method For Students 
 Router.get('/', (req, res, next) => {      
-            mariadb.query(`SELECT * from campus`, (err, rows) => {
+            mariadb.query(`SELECT DISTINCT * from Campus`, (err, rows) => {
                 if (!err) {
                     res.send({
                         error: false,
