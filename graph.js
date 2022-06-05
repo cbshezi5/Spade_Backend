@@ -16,6 +16,7 @@ const Student_cnxt = require("./contexts/Common/Students")
 const Forgotten_cnxt = require("./contexts/Authentication/Forgotten")
 const SendEmail_cnxt = require("./contexts/nodemailer")
 const GetBus_cnxt = require('./contexts/Student/Bus')
+const UploadProfile = require('./contexts/Student/Profilepic')
 //Admin
 //const RegistrationAdm_cnxt = require('./contexts/Authentication/Register_Adm')
 const LoginAdm_cnxt = require("./contexts/Authentication/Login_Adm")
@@ -44,7 +45,7 @@ app.use('/Auth/Forgotten',Forgotten_cnxt)
 app.use('/Content/Campus',Campus_cnxt)
 app.use('/',SendEmail_cnxt)
 app.use('/',GetBus_cnxt)
-
+app.use('/',UploadProfile)
 //context channelling Admin
 //app.use('/Auth/Registration_Admin', RegistrationAdm_cnxt);
 app.use('/Auth/Login_Admin', LoginAdm_cnxt);
@@ -52,6 +53,10 @@ app.use('/Auth/Login_Admin', LoginAdm_cnxt);
 //context to common entities
 app.use('/Stat/Stats', Stats_cnxt);
 app.use('/Track/Tracking', Track_cnxt)
+
+app.use(express.static('public')); 
+app.use('/images', express.static('bin/images'));
+app.use('/videos', express.static('bin/videos'));
 
 const PORT = 1100
 
