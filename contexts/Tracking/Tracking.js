@@ -34,8 +34,6 @@ function generatedSlot(Origin,Destination)
     return slotBounce
 }
 
-
-
 Router.get('/', (req, res, next) => {
 
     let lastHour = 21
