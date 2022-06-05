@@ -6,33 +6,122 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.json());
 
+function generatedSlot(Origin,Destination)
+{
+    let slotBounce 
+    if(Origin == "Soshanguve South Campus" && Destination == "Arcadia Campus" || Origin == "Arcadia Campus" && Destination == "Soshanguve South Campus")
+    slotBounce = 1
+    if(Origin == "Soshanguve North Campus" && Destination == "Arcadia Campus" || Origin == "Arcadia Campus" && Destination == "Soshanguve North Campus")
+    slotBounce = 1
+    if(Origin == "Garankuwe Campus" && Destination == "Arcadia Campus" || Origin == "Arcadia Campus" && Destination == "Garankuwe Campus")
+    slotBounce = 1
+    if(Origin == "Pretoria Campus" && Destination == "Arcadia Campus" || Origin == "Arcadia Campus" && Destination == "Pretoria Campus")
+    slotBounce = 15
+    if(Origin == "Soshanguve South Campus" && Destination == "Pretoria Campus" || Origin == "Pretoria Campus" && Destination == "Soshanguve South Campus")
+    slotBounce = 1
+    if(Origin == "Soshanguve South Campus" && Destination == "Garankuwe Campus" || Origin == "Garankuwe Campus" && Destination == "Soshanguve South Campus")
+    slotBounce = 1
+    if(Origin == "Soshanguve South Campus" && Destination == "Soshanguve North Campus" || Origin == "Soshanguve North Campus" && Destination == "Soshanguve South Campus")
+    slotBounce = 15
+    if(Origin == "Soshanguve North Campus" && Destination == "Garankuwe Campus" || Origin == "Garankuwe Campus" && Destination == "Soshanguve North Campus")
+    slotBounce = 1
+    if(Origin == "Pretoria Campus" && Destination == "Soshanguve North Campus" || Origin == "Soshanguve North Campus" && Destination == "Pretoria Campus")
+    slotBounce = 1
+
+    
+    
+
+    return slotBounce
+}
+
 
 
 Router.get('/', (req, res, next) => {
 
-
-    let sql = `SELECT s.slot_id,s.seats,DATE_FORMAT(s.time,"%H:%i") as time,DATE_FORMAT(s.date, "%Y-%m-%d") as date , t.interval, `
-    +`(SELECT campus.Campus_name FROM campus WHERE campus.campus_id = r.pointa) orig , `
-    +`(SELECT campus.Campus_name FROM campus WHERE campus.campus_id = r.pointb) dest `
-    +`FROM slot s,route r, campus c ,slot_type t `
-    +`WHERE c.campus_id = r.pointa `
-    +`AND t.slotype_id = r.slottype `
-    +`AND s.route_id = r.route_id `
-    +`AND r.pointa = (SELECT campus.campus_id FROM campus WHERE campus.Campus_name = '${req.query.ori}') `
-    +`AND r.pointb = (SELECT campus.campus_id FROM campus WHERE campus.Campus_name = '${req.query.dest}') `
-    +`AND s.date = '${req.query.date}';`
+    let lastHour = 21
+    let firstHour = 8
+    let hour = lastHour - firstHour
+    let sql = ""
+    let sqlR = 'SELECT Scheduleid,Seats,DATE_FORMAT(time,"%H:%i") as time,DATE_FORMAT(date, "%Y-%m-%d") as date '
+    +'FROM Schedule '
+    +'WHERE `From` = "'+req.query.ori+'" '
+    +'AND `To` = "'+req.query.dest+'" '
+    +'AND `Date` = "'+req.query.date+'";'
     
 
-
-
-
-    mariadb.query(sql, (err, rows, fields) => {
+  
+    mariadb.query(sqlR, async (err, rows, fields) => {
         if (!err) {
-            res.send({
-                error: false,
-                data: rows,
-            })
-            return
+
+            if(rows.length < 1)
+            {
+                let slotBounce = generatedSlot(req.query.ori,req.query.dest)
+                
+
+                 
+                if(slotBounce == 1)
+                {
+                    for (let index = 0; index < hour; index++) {
+
+                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour++}:00:00','${req.query.date}',48,1,3,1);`
+                        await mariadb.promise().query(sql)
+                        
+                        
+                    }
+                    
+                } 
+                
+                if(slotBounce == 15)
+                {
+                    for (let index = 0; index < hour; index++) {
+                        
+                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:00:00','${req.query.date}',48,1,3,1); `
+                        await mariadb.promise().query(sql)
+                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:15:00','${req.query.date}',48,1,3,1); `
+                        await mariadb.promise().query(sql)
+                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:30:00','${req.query.date}',48,1,3,1); `
+                        await mariadb.promise().query(sql)
+                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:45:00','${req.query.date}',48,1,3,1); `
+                        await mariadb.promise().query(sql)
+                        firstHour++
+                    }
+                }
+
+                console.log("New Slot Added")
+
+                mariadb.query(sqlR,(err_inner, rows_inner, fields_inner) => {
+                    if(!err_inner)
+                    {
+                        res.send({
+                            error: false,
+                            data:rows_inner,
+                            innner:"sad"
+                        })
+                        return
+                    }
+                    else
+                    {
+                        res.send({
+                            error: true,
+                            data:err_inner,
+                            innner:"sad"
+                        })
+                        return
+                    }
+                });
+               
+            }
+            else
+            {
+                res.send({
+                    error: false,
+                    data:rows,
+                    out:"happy"
+                })
+                return
+            }
+            
+
         } else {
             res.send({
                 error: true,
