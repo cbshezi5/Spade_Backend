@@ -21,8 +21,8 @@ Router.post('/', (req, res, next) => {
         } else {
             res.send({
                 "error": true,
-                "code": "L003_ADMIN",
-                "message": "Error admin email not supplied",
+                "code": "L003",
+                "message": "Error administrator email not supplied",
             })
             return
         }
@@ -31,16 +31,16 @@ Router.post('/', (req, res, next) => {
         } else {
             res.send({
                 "error": true,
-                "code": "L002_ADMIN",
-                "message": "Error admin password not supplied",
+                "code": "L002",
+                "message": "Error administrator password not supplied",
             })
             return
         }
     } else {
         res.send({
             "error": true,
-            "code": "L001_ADMIN",
-            "message": "Error admin credintials were not supplied",
+            "code": "L001",
+            "message": "Error administrator credintials were not supplied",
         })
         return
     }
@@ -48,43 +48,38 @@ Router.post('/', (req, res, next) => {
 
 
 
-    mariadb.query(`SELECT * FROM admin WHERE email = "${req.body.email}"`, (err, rows, fields) => {
+    mariadb.query(`SELECT * FROM Administrator WHERE Email = "${req.body.email}"`, (err, rows, fields) => {
         if (!err) {
             if (rows.length < 1) {
                 res.send({
                     "error": true,
-                    "code": "L004_ADMIN",
+                    "code": "L004",
                     "message": "Email doesn't exist on the system",
                 })
                 return
             }
 
-            mariadb.query(`SELECT * FROM admin WHERE email = "${req.body.email}" `, (err, rows, fields) => {
-                var bytes = CryptoJS.AES.decrypt(rows[0].password, '123');
+            mariadb.query(`SELECT * FROM Administrator WHERE Email = "${req.body.email}"`, (err, rows, fields) => {
+                
+                var bytes = CryptoJS.AES.decrypt(rows[0].Password, '123');
                 var originalText = bytes.toString(CryptoJS.enc.Utf8);
+
+               
 
                 if (!err) {
                     if (originalText != req.body.password) {
                         res.send({
                             "error": true,
-                            "code": "L005_ADMIN",
+                            "code": "L005",
                             "message": "Password is incorrect",
                         })
                         return
                     } else {
-                        // if (!rows[0].isVerified) {
-                        //     res.send({
-                        //         "error": true,
-                        //         "code": "L006",
-                        //         "message": "Admin is not verified",
-                        //     })
-                        //     return
-                        // }
                         res.send({
                             "error": false,
                             "data": rows,
                         });
-                        console.log(new Date() + " -  A admin logged in " + rows[0].email)
+                      
                     }
                 }
             });
