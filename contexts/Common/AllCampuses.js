@@ -28,4 +28,45 @@ Router.get('/', (req, res, next) => {
         
 });
 
+
+Router.put('/',(req,res,next)=>{
+    
+    mariadb.query(`SELECT * FROM Student WHERE StudentNumber = "${req.body.stNumber}"`, (err, rows) => {
+        if (!err) {
+            res.send({
+                error: false,
+                data: rows
+            });
+        } else {
+            res.send({
+                error: true,
+                code: "C001_SQL_GET",
+                message: err
+            });
+            return
+        }
+    })
+
+})
+
+Router.post('/',(req,res,next)=>{
+    
+    mariadb.query(`SELECT * FROM Bus WHERE Studentid = "${req.body.stid}"`, (err, rows) => {
+        if (!err) {
+            res.send({
+                error: false,
+                data: rows
+            });
+        } else {
+            res.send({
+                error: true,
+                code: "C001_SQL_GET",
+                message: err
+            });
+            return
+        }
+    })
+
+})
+
 module.exports = Router
