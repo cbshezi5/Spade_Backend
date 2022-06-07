@@ -51,7 +51,7 @@ Router.put('/',(req,res,next)=>{
 
 Router.post('/',(req,res,next)=>{
     
-    mariadb.query(`SELECT * FROM Bus WHERE Studentid = "${req.body.stid}"`, (err, rows) => {
+    mariadb.query('SELECT `Busid`,`Studentid`,`From`,`To`,`Status`,`Temporally`,TIME_FORMAT(Time, "%H:%i") AS Time,`Date` FROM Bus WHERE Studentid = '+req.body.stid+'', (err, rows) => {
         if (!err) {
             res.send({
                 error: false,
