@@ -70,7 +70,7 @@ Router.post('/Student/Upload', imageUpload.single('image'), (req, res, next) => 
                     if(req.file)
                     {
                         let image_path = req.file.filename;
-                        mariadb.query(`UPDATE Student  SET profilepicture = 'localhost:1100/images/${image_path}'  WHERE Studentid = ${req.body.Studentid}`, (err, rows, fields) => {
+                        mariadb.query(`UPDATE Student  SET profilepicture = 'https://dwpugzvgpx.us-east-1.awsapprunner.com/images/${image_path}'  WHERE Studentid = ${req.body.Studentid}`, (err, rows, fields) => {
                             if(!err)
                             {
                                 res.send({
