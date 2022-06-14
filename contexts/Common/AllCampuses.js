@@ -50,8 +50,17 @@ Router.put('/',(req,res,next)=>{
 })
 
 Router.post('/',(req,res,next)=>{
+
+    let sql ='SELECT Busid,Studentid,`From`,`To`,Status,Temporally,TIME_FORMAT(Time, "%H:%i") AS Time,Date '
+    +'FROM Bus ' 
+    +'WHERE Studentid = '+req.body.stid+' ' 
+    +'AND Status = "Active" '
+    +'AND Date = CURRENT_DATE '
+    +'AND TIME_FORMAT(Time, "%H:%i") > TIME_FORMAT(CURRENT_TIME, "%H:%i") '
+    +'ORDER BY TIME_FORMAT(Time, "%H:%i"); '
+   
     
-    mariadb.query('SELECT `Busid`,`Studentid`,`From`,`To`,`Status`,`Temporally`,TIME_FORMAT(Time, "%H:%i") AS Time,`Date` FROM Bus WHERE Studentid = '+req.body.stid+'', (err, rows) => {
+    mariadb.query(sql, (err, rows) => {
         if (!err) {
             res.send({
                 error: false,
