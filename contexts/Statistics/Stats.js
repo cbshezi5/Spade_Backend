@@ -20,15 +20,15 @@ Router.get('/', (req, res, next) => {
 
                         let sql = 'SELECT COUNT(*) Active FROM Bus '                      
                         +'WHERE `Time` > TIME_FORMAT(CURRENT_TIME, "%H:%i") '
-                        +'AND DATE_FORMAT(date, "%Y-%c-%e") = DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") '
+                        +'AND DATE_FORMAT(date, "%Y-%c-%e") >= DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") '
                         +'AND Status = "Active";'
 
                         mariadb.query(sql, (err, active_rows, fields) => {
                             if (!err) {
 
                                 let sql2 = 'SELECT COUNT(*) Expired FROM Bus '                      
-                                +'WHERE `Time` > TIME_FORMAT(CURRENT_TIME, "%H:%i") '
-                                +'OR DATE_FORMAT(date, "%Y-%c-%e") > DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") '
+                                +'WHERE `Time` < TIME_FORMAT(CURRENT_TIME, "%H:%i") '
+                                +'AND DATE_FORMAT(date, "%Y-%c-%e") < DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") '
                                 +'AND Status = "Active";'
 
                                 mariadb.query(sql2, (err, expired_rows, fields) => {
