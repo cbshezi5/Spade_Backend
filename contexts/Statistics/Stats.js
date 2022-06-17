@@ -39,7 +39,6 @@ Router.get('/', (req, res, next) => {
                                             del:del_rows[0].Deleted,
                                             active:active_rows[0].Active,
                                             expired:expired_rows[0].Expired
-
                                         })
                                         return
                 

@@ -8,6 +8,27 @@ const e = require('express');
 
 app.use(bodyParser.json());
 
+Router.get('/all', (req, res, next) => {
+   
+            mariadb.query(`SELECT Studentid as id,Firstname as firstname,Lastname as lastname,Student_Email as activity,IdNumber as datetime,StudentNumber as studNum from Student`, (err, rows) => {
+                if (!err) {
+                    res.send({
+                        error: false,
+                        data: rows
+                    });
+                } else {
+                    res.send({
+                        error: true,
+                        code: "C001_SQL_GET",
+                        message: err
+                    });
+                    return
+                }
+            })
+        
+    
+});
+
 // Get Method For Students 
 Router.get('/', (req, res, next) => {
     if (Object.keys(req.query).length == 0) {
