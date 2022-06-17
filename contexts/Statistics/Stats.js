@@ -9,90 +9,90 @@ app.use(bodyParser.json());
 
 
 
-Router.post('/', (req, res, next) => {
+Router.get('/', (req, res, next) => {
 
-    let field;
-
-    if (Object.keys(req.body).length == 0) {
-        res.send({
-            error: true,
-            code: "S001",
-            message: "body parameters were not found"
-        })
-        return
-    }
-
-
-    if (req.body.field) {
-        mariadb.query(`SELECT ${req.body.field} FROM stats`, (err, rows, fields) => {
+        mariadb.query(`SELECT COUNT(*) as Registered FROM Student`, (err, reg_rows, fields) => {
             if (!err) {
-                res.send({
-                    error: false,
-                    data: rows,
+
+                mariadb.query(`SELECT COUNT(*) as Deleted FROM Bus WHERE Status = 'Deleted'`, (err, del_rows, fields) => {
+
+                    if (!err) {
+
+                        let sql = 'SELECT COUNT(*) Active FROM Bus '                      
+                        +'WHERE `Time` > TIME_FORMAT(CURRENT_TIME, "%H:%i") '
+                        +'AND DATE_FORMAT(date, "%Y-%c-%e") = DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") '
+                        +'AND Status = "Active";'
+
+                        mariadb.query(sql, (err, active_rows, fields) => {
+                            if (!err) {
+
+                                let sql2 = 'SELECT COUNT(*) Expired FROM Bus '                      
+                                +'WHERE `Time` > TIME_FORMAT(CURRENT_TIME, "%H:%i") '
+                                +'OR DATE_FORMAT(date, "%Y-%c-%e") > DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") '
+                                +'AND Status = "Active";'
+
+                                mariadb.query(sql2, (err, expired_rows, fields) => {
+                                    if (!err) {
+                                        res.send({
+                                            error: false,
+                                            reg:reg_rows[0].Registered,
+                                            del:del_rows[0].Deleted,
+                                            active:active_rows[0].Active,
+                                            expired:expired_rows[0].Expired
+
+                                        })
+                                        return
+                
+                                    } else {
+                                        res.send({
+                                            error: true,
+                                            code: "S001_SQL",
+                                            message: "expired_row"
+                                        })
+                                        return
+                                    }
+                                })
+                
+                            } else {
+                                res.send({
+                                    error: true,
+                                    code: "S001_SQL",
+                                    message: "active_rows"
+                                })
+                                return
+                            }
+        
+        
+        
+                        })
+        
+  
+                    } else {
+                        res.send({
+                            error: true,
+                            code: "S001_SQL",
+                            message: "del_rows"
+                        })
+                        return
+                    }
+
                 })
-                return
+
             } else {
                 res.send({
                     error: true,
                     code: "S001_SQL",
-                    message: "field element was not found as a body element"
+                    message: "reg_rows"
                 })
                 return
             }
         });
-    } else {
-        res.send({
-            error: true,
-            code: "S002",
-            message: "field element was not found as a body element"
-        })
-        return
-    }
+  
 
 
 
 });
 
-Router.put('/', (req, res) => {
 
-    let field;
-    let updateNum = 0;
-  
-    if (Object.keys(req.body).length == 0) {
-        res.send({
-            error: true,
-            code: "C001_PUT",
-            message: "body parameters were not found"
-        });
-        return
-    }
-
-    if (req.body.field) {
-        mariadb.query(`UPDATE stats SET  ${req.body.field} = ${req.body.updateNum} WHERE id = 1`,(err, rows,fields) => {
-            if (!err) {
-                res.send({
-                    error: false,
-                    data: rows //`Column with the name: ${req.body.field} has been updated.`
-                })
-                return
-            } else {
-                res.send({
-                    error: true,
-                    message: err,
-                    code: "C001_SQL_PUT"
-                })
-                return
-            }
-        });
-    } else {
-                res.send({
-                    error: true,
-                    message: "One or many of the required body arguements is missing",
-                    code: "C002_PUT"
-                })
-                return
-            }
-      
-})
 
 module.exports = Router;
