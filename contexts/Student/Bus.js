@@ -8,6 +8,51 @@ const e = require('express');
 
 app.use(bodyParser.json());
 
+Router.get('/Administrator/GetBooked', (req, res, next) => {
+    
+    let surveyUser = [];
+
+    mariadb.query(`SELECT Student.studentid as id, StudentNumber as StudentNo, firstname as Firstname, lastname as Lastname, Student_Email as Email FROM Student ,Bus WHERE Bus.studentid = Student.studentid GROUP BY Student.studentid;`,async (err,outer_rows,fields)=>{
+
+        if(err || outer_rows.length < 1)
+        {
+            res.send({
+                error:true,
+                message:"Error sql statement couldn't execute successfully",    
+                code:"O001_POST_SQL",
+                sqlMessage:err        
+            })
+            return;
+        }
+        for (let index = 0; index < outer_rows.length; index++) {
+            await mariadb.promise().query('SELECT CONCAT("Booking ", Busid) as answer, CONCAT("From ", `From`," To ",`To`," Date ",`Date`," Time ",`Time` ) as question FROM Bus WHERE Studentid = '+outer_rows[index].id+'')
+            .then((data)=>{
+                if(data[0][0])
+                {
+                    surveyUser[index] = 
+                        {
+                            Id : index,
+                            Firstname : outer_rows[index].Firstname,
+                            Lastname :  outer_rows[index].Lastname,
+                            StudentNo : outer_rows[index].StudentNo,
+                            Email : outer_rows[index].Email,
+                            Survey : data[0]
+                        }
+                    
+                }
+                
+            })  
+        }
+
+        res.send(surveyUser)
+        
+    })
+
+
+});
+
+
+
 // Get Method For Students 
 Router.get('/Student/GetBooked', (req, res, next) => {
     if (Object.keys(req.query).length == 0) {
