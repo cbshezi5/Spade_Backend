@@ -35,7 +35,7 @@ Router.post('/', (req, res, next) => {
 
     if(Object.keys(req.body).length == 1)
     {
-        mariadb.query(`SELECT * FROM student WHERE email = "${req.body.email}"`, (err, rows, fields) => {
+        mariadb.query(`SELECT * FROM Student WHERE Student_Email = "${req.body.email}"`, (err, rows, fields) => {
             if(err)
             {
                 res.send({
@@ -82,7 +82,7 @@ Router.post('/', (req, res, next) => {
             return
         }
         var ciphertext = CryptoJS.AES.encrypt(req.body.newPassword, "123").toString();
-        var sqlStatement = "UPDATE `student` SET `password` = '"+ciphertext+"' WHERE `email` = '"+req.body.email+"'";
+        var sqlStatement = "UPDATE `Student` SET `Password` = '"+ciphertext+"' WHERE `Student_Email` = '"+req.body.email+"'";
         mariadb.query(sqlStatement, (err, rows, fields) => {
             if(err)
             {
