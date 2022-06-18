@@ -18,10 +18,7 @@ Router.get('/', (req, res, next) => {
 
                     if (!err) {
 
-                        let sql = 'SELECT COUNT(*) Active FROM Bus '                      
-                        +'WHERE `Time` > TIME_FORMAT(CURRENT_TIME, "%H:%i") '
-                        +'AND DATE_FORMAT(date, "%Y-%c-%e") >= DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") '
-                        +'AND Status = "Active";'
+                        let sql = 'SELECT sum(Active) as Active FROM ( SELECT COUNT(*) Active FROM Bus WHERE Status = "Active" AND DATE_FORMAT(date, "%Y-%c-%e") > DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") UNION ALL SELECT COUNT(*) Active FROM Bus WHERE Status = "Active" AND DATE_FORMAT(date, "%Y-%c-%e") >= DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") AND `Time` > TIME_FORMAT(CURRENT_TIME, "%H:%i") ) sum_table;'
 
                         mariadb.query(sql, (err, active_rows, fields) => {
                             if (!err) {
