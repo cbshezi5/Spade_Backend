@@ -25,7 +25,7 @@ Router.get('/Administrator/GetBooked', (req, res, next) => {
             return;
         }
         for (let index = 0; index < outer_rows.length; index++) {
-            await mariadb.promise().query('SELECT CONCAT("Booking ", Busid) as answer, CONCAT("From ", `From`," To ",`To`," Date ",`Date`," Time ",`Time` ) as question FROM Bus WHERE Studentid = '+outer_rows[index].id+'')
+            await mariadb.promise().query('SELECT CONCAT("Booking ", Busid) as answer, CONCAT("From ", `From`," To ",`To`," Date ",`Date`," Time ",`Time` ) as question FROM Bus WHERE Studentid = '+outer_rows[index].id+' AND Status <> "Deleted"')
             .then((data)=>{
                 if(data[0][0])
                 {
