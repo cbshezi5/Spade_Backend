@@ -131,7 +131,7 @@ Router.put('/Student/ClearAll',(req, res, next)=>{
 
 Router.get('/Administrator/GetBooked', (req, res, next) => {
     
-    let surveyUser = [];
+    let surveyUser = [{}];
 
     mariadb.query(`SELECT Student.studentid as id, StudentNumber as StudentNo, firstname as Firstname, lastname as Lastname, Student_Email as Email FROM Student ,Bus WHERE Bus.studentid = Student.studentid GROUP BY Student.studentid;`,async (err,outer_rows,fields)=>{
 
