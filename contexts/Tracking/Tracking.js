@@ -63,10 +63,8 @@ Router.get('/', (req, res, next) => {
                 {
                     for (let index = 0; index < hour; index++) {
 
-                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour++}:00:00','${req.query.date}',48,1,3,1,1);`
+                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour++}:00:00','${req.query.date}',48,1,1,1,1);`
                         await mariadb.promise().query(sql)
-                        
-                        
                     }
                     
                 } 
@@ -75,13 +73,13 @@ Router.get('/', (req, res, next) => {
                 {
                     for (let index = 0; index < hour; index++) {
                         
-                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:00:00','${req.query.date}',48,1,3,1,2); `
+                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:00:00','${req.query.date}',48,1,1,1,2); `
                         await mariadb.promise().query(sql)
-                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:15:00','${req.query.date}',48,1,3,1,2); `
+                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:15:00','${req.query.date}',48,1,1,1,2); `
                         await mariadb.promise().query(sql)
-                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:30:00','${req.query.date}',48,1,3,1,2); `
+                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:30:00','${req.query.date}',48,1,1,1,2); `
                         await mariadb.promise().query(sql)
-                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:45:00','${req.query.date}',48,1,3,1,2); `
+                        sql = `INSERT INTO Schedule VALUES(DEFAULT,'${req.query.ori}','${req.query.dest}','${firstHour}:45:00','${req.query.date}',48,1,1,1,2); `
                         await mariadb.promise().query(sql)
                         firstHour++
                     }
