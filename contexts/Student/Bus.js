@@ -145,13 +145,13 @@ Router.get('/Administrator/GetBooked', (req, res, next) => {
             })
             return;
         }
-        
+        let x = 0
         for (let index = 0; index < outer_rows.length; index++) {
             await mariadb.promise().query('SELECT CONCAT("Booking ", Busid) as answer, CONCAT("From ", `From`," To ",`To`," Date ",`Date`," Time ",`Time` ) as question FROM Bus WHERE Studentid = '+outer_rows[index].id+' AND Status <> "Deleted" AND NOT DATE_FORMAT(date, "%Y-%c-%e") < DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") AND NOT `Time` < TIME_FORMAT(CURRENT_TIME, "%H:%i") UNION ALL SELECT CONCAT("Booking ", Busid) as answer, CONCAT("From ", `From`," To ",`To`," Date ",`Date`," Time ",`Time` ) as question FROM Bus WHERE Studentid = '+outer_rows[index].id+' AND Status <> "Deleted" AND DATE_FORMAT(date, "%Y-%c-%e") > DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e");')
             .then((data)=>{
                 if(data[0][0])
                 {  
-                    surveyUser[index] = 
+                    surveyUser[x] = 
                         {
                             Id : index,
                             Firstname : outer_rows[index].Firstname,
@@ -160,13 +160,12 @@ Router.get('/Administrator/GetBooked', (req, res, next) => {
                             Email : outer_rows[index].Email,
                             Survey : data[0]
                         }
-                    
+                        x++
                 }
-                
             })  
         }
 
-        res.send(surveyUser.splice(surveyUser.indexOf(null), 2))
+        res.send(surveyUser)
         
     })
 
