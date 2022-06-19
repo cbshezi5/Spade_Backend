@@ -27,6 +27,8 @@ function generatedSlot(Origin,Destination)
     slotBounce = 1
     if(Origin == "Pretoria Campus" && Destination == "Soshanguve North Campus" || Origin == "Soshanguve North Campus" && Destination == "Pretoria Campus")
     slotBounce = 1
+    if(Origin == "Pretoria Campus" && Destination == "Garankuwe Campus" || Origin == "Garankuwe Campus" && Destination == "Pretoria Campus")
+    slotBounce = 1
 
     
     
@@ -84,8 +86,6 @@ Router.get('/', (req, res, next) => {
                         firstHour++
                     }
                 }
-
-                console.log("New Slot Added")
 
                 mariadb.query(sqlR,(err_inner, rows_inner, fields_inner) => {
                     if(!err_inner)
