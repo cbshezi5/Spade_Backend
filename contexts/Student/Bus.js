@@ -8,6 +8,88 @@ const e = require('express');
 
 app.use(bodyParser.json());
 
+
+
+
+Router.delete('/Student/DeleteProfile',(req, res, next)=>{
+    if (Object.keys(req.query).length == 0) {
+        res.send({
+            error: true,
+            code: "C001_GET",
+            message: "query parameters were not found"
+        });
+        return
+    }
+
+    if (req.query.id) {
+        
+        mariadb.query('DELETE FROM Student WHERE Studentid = '+req.query.id+';', (err, rows) => {
+            if (!err) {
+                res.send({
+                    error: false,
+                    data: rows
+                });
+            } else {
+                res.send({
+                    error: true,
+                    code: "C001_SQL_GET",
+                    message: err
+                });
+                return
+            }
+        })
+    
+} else {
+    res.send({
+        error: true,
+        code: "C002_GET",
+        message: "id was not recieved from query arguements"
+    });
+    return
+}
+    
+})
+
+Router.put('/Student/UpdateProfile',(req, res, next)=>{
+    if (Object.keys(req.body).length == 0) {
+        res.send({
+            error: true,
+            code: "C001_GET",
+            message: "query parameters were not found"
+        });
+        return
+    }
+
+    if (req.body.id) {
+        
+        mariadb.query('UPDATE Student SET profilepicture = NULL WHERE Studentid = '+req.body.id+';', (err, rows) => {
+            if (!err) {
+                res.send({
+                    error: false,
+                    data: rows
+                });
+            } else {
+                res.send({
+                    error: true,
+                    code: "C001_SQL_GET",
+                    message: err
+                });
+                return
+            }
+        })
+    
+} else {
+    res.send({
+        error: true,
+        code: "C002_GET",
+        message: "id was not recieved from body arguements"
+    });
+    return
+}
+    
+})
+
+
 Router.put('/Student/ClearAll',(req, res, next)=>{
     if (Object.keys(req.body).length == 0) {
         res.send({
