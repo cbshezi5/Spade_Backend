@@ -3,9 +3,9 @@ const mysql = require('mysql2');
 const prompt = require('prompt-sync')();
 
 const mariadb = mysql.createConnection({
-    host: 'bus-point-db-inst.cvqpj5ith2h1.us-east-1.rds.amazonaws.com',
-    user: 'admin',
-    password: '1234567891',
+    host: 'inst-bus-point-db.cvqpj5ith2h1.us-east-1.rds.amazonaws.com',
+    user: 'Bulelani',
+    password: 'DSO123tut',
     database: 'buspoint_db'
 })
 mariadb.connect()
