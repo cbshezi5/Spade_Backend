@@ -131,11 +131,11 @@ Router.put('/Student/ClearAll',(req, res, next)=>{
 
 Router.get('/Administrator/GetBooked', (req, res, next) => {
     
-    let surveyUser = [{}];
+    let surveyUser = [];
 
     mariadb.query(`SELECT Student.studentid as id, StudentNumber as StudentNo, firstname as Firstname, lastname as Lastname, Student_Email as Email FROM Student ,Bus WHERE Bus.studentid = Student.studentid GROUP BY Student.studentid;`,async (err,outer_rows,fields)=>{
 
-        if(err || outer_rows.length < 1)
+        if(err)
         {
             res.send({
                 error:true,
@@ -145,11 +145,12 @@ Router.get('/Administrator/GetBooked', (req, res, next) => {
             })
             return;
         }
+        
         for (let index = 0; index < outer_rows.length; index++) {
             await mariadb.promise().query('SELECT CONCAT("Booking ", Busid) as answer, CONCAT("From ", `From`," To ",`To`," Date ",`Date`," Time ",`Time` ) as question FROM Bus WHERE Studentid = '+outer_rows[index].id+' AND Status <> "Deleted" AND NOT DATE_FORMAT(date, "%Y-%c-%e") < DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e") AND NOT `Time` < TIME_FORMAT(CURRENT_TIME, "%H:%i") UNION ALL SELECT CONCAT("Booking ", Busid) as answer, CONCAT("From ", `From`," To ",`To`," Date ",`Date`," Time ",`Time` ) as question FROM Bus WHERE Studentid = '+outer_rows[index].id+' AND Status <> "Deleted" AND DATE_FORMAT(date, "%Y-%c-%e") > DATE_FORMAT(CURRENT_DATE, "%Y-%c-%e");')
             .then((data)=>{
                 if(data[0][0])
-                {
+                {  
                     surveyUser[index] = 
                         {
                             Id : index,
@@ -165,7 +166,7 @@ Router.get('/Administrator/GetBooked', (req, res, next) => {
             })  
         }
 
-        res.send(surveyUser)
+        res.send(surveyUser.splice(surveyUser.indexOf(null), 2))
         
     })
 
