@@ -1,27 +1,28 @@
 {
-  "name": "backend-nodejs",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "start": "nodemon server.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "crypto-js": "^4.1.1",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "multer": "^1.4.5-lts.1",
-    "mysql2": "^2.3.3",
-    "nodemailer": "^6.7.1",
-    "nodemon": "^2.0.15",
-    "path": "^0.12.7",
-    "prompt-sync": "^4.2.0",
-    "readline": "^1.3.0",
-    "socket.io": "^4.4.1"
-  }
+    "name": "backend-nodejs",
+    "version": "1.0.0",
+    "description": "",
+    "main": "Spade.js",
+    "scripts": {
+        "start": "node Spade.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@voximplant/apiclient-nodejs": "^2.0.5",
+        "body-parser": "^1.19.0",
+        "cors": "^2.8.5",
+        "crypto-js": "^4.1.1",
+        "dotenv": "^10.0.0",
+        "express": "^4.17.1",
+        "jsonwebtoken": "^8.5.1",
+        "multer": "^1.4.5-lts.1",
+        "mysql2": "^2.3.3",
+        "nodemailer": "^6.7.1",
+        "nodemon": "^2.0.15",
+        "path": "^0.12.7",
+        "prompt-sync": "^4.2.0",
+        "readline": "^1.3.0",
+        "socket.io": "^4.4.1"
+    }
 }
