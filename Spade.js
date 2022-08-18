@@ -26,10 +26,10 @@ app.use('/VoxiUserAdd',Campus_cnxt)
 
 const PORT = 1100
 
-var server = app.listen(PORT, (e) => {
+var server = app.listen(process.env.PORT || PORT, (e) => {
     console.log("********************************************************");
     console.log("* DB: localhost:3306 DBname:'buspoint_db_schema'       *");
-    console.log("*                PORT is running on " + PORT + "               *");
+    console.log("*                PORT is running on " + process.env.PORT || PORT + "               *");
     console.log("*                 http://localhost:1100                *");
     console.log("********************************************************");
 
