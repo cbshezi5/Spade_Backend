@@ -6,7 +6,7 @@
     "scripts": {
         "start": "node Spade.js"
     },
-    "author": "",
+    "author": "Cebolenkosi Shezi",
     "license": "ISC",
     "dependencies": {
         "@voximplant/apiclient-nodejs": "^2.0.5",
